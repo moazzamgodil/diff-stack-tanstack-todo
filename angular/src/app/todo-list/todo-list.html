@@ -1,0 +1,59 @@
+<div class="todo-container">
+    <h1>Angular Todo</h1>
+
+    <form (submit)="addTodo(); $event.preventDefault()">
+        <input [value]="title()" (input)="
+        title.set(
+          $any($event.target).value
+        )
+      " placeholder="What needs to be done?" />
+
+        <button type="submit" [disabled]="
+        createMutation.isPending()
+      ">
+            {{
+            createMutation.isPending()
+            ? 'Adding...'
+            : 'Add'
+            }}
+        </button>
+    </form>
+
+    @if (todosQuery.isPending()) {
+    <p>Loading...</p>
+    }
+
+    @if (todosQuery.isError()) {
+    <p>
+        Error:
+        {{ todosQuery.error()?.message }}
+    </p>
+    }
+
+    @if (todosQuery.data(); as todos) {
+    <div class="todos">
+        @for (todo of todos; track todo.id) {
+        <div class="todo">
+            <label>
+                <input type="checkbox" [checked]="todo.completed" (change)="
+                toggleTodo(
+                  todo.id,
+                  todo.completed
+                )
+              " />
+
+                <span [class.completed]="
+                todo.completed
+              ">
+                    {{ todo.title }}
+                </span>
+            </label>
+
+            <button type="button" (click)="removeTodo(todo.id)">
+                Delete
+            </button>
+        </div>
+        }
+    </div>
+    }
+</div>
